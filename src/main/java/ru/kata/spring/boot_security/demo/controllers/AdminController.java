@@ -36,7 +36,7 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String addUser(Model model, User user) {
+    public String addUser(User user) {
 
         userService.createUser(user);
 
@@ -53,7 +53,7 @@ public class AdminController {
     }
 
     @PostMapping("{id}/update")
-    public String updateUser(Model model, User user) {
+    public String updateUser(User user) {
 
         userService.updateUser(user);
 
