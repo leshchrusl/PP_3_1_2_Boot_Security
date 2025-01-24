@@ -14,12 +14,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository) {
+                           RoleService roleService) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void createUser(User user) {
-        Role role = roleRepository.findByRole("ROLE_USER");
+        Role role = roleService.findRoleByName("ROLE_USER");
         user.setRoles(List.of(role));
         userRepository.save(user);
     }
