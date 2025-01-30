@@ -1,5 +1,8 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +18,15 @@ public class AdminController {
 
     private final UserService userService;
 
-    public AdminController(UserService userService) {
+    @Autowired
+    public AdminController(UserService userService,
+                           PasswordEncoder passwordEncoder) {
         this.userService = userService;
+    }
+
+    @GetMapping("")
+    public String getAdminHelloPage(Model model) {
+        return "adminHello";
     }
 
     @GetMapping("/users")
@@ -47,7 +57,14 @@ public class AdminController {
     public String getUpdateUserPage(@PathVariable("id") Long id,
                                     Model model) {
 
-        model.addAttribute("user", userService.findUserById(id));
+        User user = userService.findUserById(id);
+
+        if (user == null) {
+            user = new User();
+            user.setId(id);
+        }
+
+        model.addAttribute("user", user);
 
         return "updateUser";
     }
@@ -55,7 +72,7 @@ public class AdminController {
     @PostMapping("{id}/update")
     public String updateUser(User user) {
 
-        userService.updateUser(user);
+            userService.updateUser(user);
 
         return "redirect:/admin/users";
     }

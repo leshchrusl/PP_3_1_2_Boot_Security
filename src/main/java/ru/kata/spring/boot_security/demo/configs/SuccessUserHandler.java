@@ -22,13 +22,17 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
                 .authorityListToSet(authentication
                         .getAuthorities());
 
-        if (roles.contains("ROLE_ADMIN")) {
+        if (roles.contains("ROLE_ADMIN") && roles.contains("ROLE_USER")) {
 
             httpServletResponse.sendRedirect("/admin");
 
-        } else  {
+        } else if (roles.contains("ROLE_USER")) {
 
-            httpServletResponse.sendRedirect("/user");
+            httpServletResponse.sendRedirect("/");
+
+        } else {
+
+            httpServletResponse.sendRedirect("/");
         }
     }
 }

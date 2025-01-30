@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entities.Role;
@@ -12,13 +14,14 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final RoleService roleService;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           RoleService roleService) {
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,16 +47,28 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void createUser(User user) {
-        Role role = roleService.findRoleByName("ROLE_USER");
-        user.setRoles(List.of(role));
+
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of(new Role(2L, "ROLE_USER")));
+        }
+
+        user.setPassword(passwordEncoder
+                .encode(user.getPassword()));
+
         userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
-        Role role = roleService.findRoleByName("ROLE_USER");
-        user.setRoles(List.of(role));
+
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of(new Role(2L, "ROLE_USER")));
+        }
+
+        user.setPassword(passwordEncoder
+                .encode(user.getPassword()));
+
         userRepository.save(user);
     }
 
@@ -61,5 +76,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

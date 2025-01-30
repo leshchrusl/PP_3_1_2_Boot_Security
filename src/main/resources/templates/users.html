@@ -13,6 +13,7 @@ Users table:
         <tr>
             <th> Id </th>
             <th> Username </th>
+            <th> Password </th>
             <th> Date of birth </th>
             <th> Email </th>
             <th> Roles </th>
@@ -22,9 +23,12 @@ Users table:
         <tr th:each="user : ${users}">
             <td><span th:text="${user.id}"></span></td>
             <td><span th:text="${user.username}"></span></td>
+            <td><span th:text="${user.password}"></span></td>
             <td><span th:text="${user.dateOfBirth}"></span></td>
             <td><span th:text="${user.email}"></span></td>
-            <td><span th:text="${user.roles}"></span></td>
+            <td><span th:each="role : ${user.roles}">
+                <span th:text="${role}"></span>
+            </span></td>
             <td><a th:href="'/admin' + '/' + ${user.id} + '/update'">Update</a></td>
             <td><a th:href="'/admin' + '/' + ${user.id} + '/delete'">Delete</a></td>
         </tr>

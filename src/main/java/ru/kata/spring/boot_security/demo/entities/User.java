@@ -27,7 +27,7 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id"),
@@ -81,7 +81,7 @@ public class User implements UserDetails {
     }
 
     public List<Role> getRoles() {
-        return roles;
+        return this.roles;
     }
 
     public void setRoles(List<Role> roles) {
@@ -100,7 +100,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return this.getRoles();
     }
 
     @Override

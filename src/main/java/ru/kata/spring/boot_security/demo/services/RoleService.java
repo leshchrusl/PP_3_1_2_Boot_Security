@@ -9,4 +9,6 @@ public interface RoleService {
     Role findRoleByName(String roleName);
     List<Role> findAllRoles();
     List<Role> findUserRoles(User user);
+    void saveRole(Role role);
+    void deleteRole(Role role);
 }
