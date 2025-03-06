@@ -33,7 +33,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id")
     )
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     public User() {}
 
