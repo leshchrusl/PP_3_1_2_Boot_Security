@@ -69,13 +69,15 @@ public class AdminController {
         }
 
         model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
 
         return "updateUser";
     }
 
     @PostMapping("{id}/update")
-    public String updateUser(User user) {
+    public String updateUser(User user, List<Role> roles) {
 
+        user.setRoles(roles);
         userService.updateUser(user);
 
         return "redirect:/admin/users";
