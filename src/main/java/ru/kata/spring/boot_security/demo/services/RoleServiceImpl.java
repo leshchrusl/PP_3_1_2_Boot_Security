@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,5 +44,25 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public void deleteRole(Role role) {
         roleRepository.delete(role);
+    }
+
+    @Override
+    public Role findRoleById(Long id) {
+        return roleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Role> findByIdRoles(List<Long> id) {
+
+        List<Role> roles = new ArrayList<>();
+
+        if (id.contains(1L)) {
+            roles.add(findRoleById(1L));
+            roles.add(findRoleById(2L));
+        } else {
+            roles.add(findRoleById(2L));
+        }
+
+        return roles;
     }
 }

@@ -5,12 +5,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
+import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.util.ArrayList;
@@ -21,11 +19,14 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
     public AdminController(UserService userService,
+                           RoleService roleService,
                            PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("")
@@ -50,8 +51,10 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String addUser(User user) {
+    public String addUser(@ModelAttribute("user") User user,
+                          @RequestParam("listRoles") ArrayList<Long> roles) {
 
+        user.setRoles(roleService.findByIdRoles(roles));
         userService.createUser(user);
 
         return "redirect:/admin/users";
@@ -64,20 +67,20 @@ public class AdminController {
         User user = userService.findUserById(id);
 
         if (user == null) {
-            user = new User();
-            user.setId(id);
+            return "redirect:/admin/users";
         }
 
         model.addAttribute("user", user);
-        model.addAttribute("roles", user.getRoles());
 
         return "updateUser";
     }
 
     @PostMapping("{id}/update")
-    public String updateUser(User user, List<Role> roles) {
+    public String updateUser(@ModelAttribute("user") User user,
+                             @RequestParam("listRoles") ArrayList<Long> roles) {
 
-        user.setRoles(roles);
+        user.setRoles(roleService.findByIdRoles(roles));
+
         userService.updateUser(user);
 
         return "redirect:/admin/users";
@@ -85,6 +88,10 @@ public class AdminController {
 
     @GetMapping("/{id}/delete")
     public String deleteUser(@PathVariable("id") Long id) {
+
+        if (userService.findUserById(id) == null) {
+            return "redirect:/admin/users";
+        }
 
         userService.deleteUserById(id);
 

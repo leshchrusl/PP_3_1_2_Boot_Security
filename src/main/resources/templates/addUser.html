@@ -22,6 +22,12 @@
   <label for="email">Email</label>
   <input type="text" th:field="*{email}" id="email">
 
+  <label>Role:</label>
+  <select multiple name="listRoles" required="required">
+    <option value="1">ADMIN</option>
+    <option selected="selected" value="2">USER</option>
+  </select>
+
   <input type="submit" value="Add user"/>
 
 </form>

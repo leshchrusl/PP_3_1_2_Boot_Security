@@ -48,10 +48,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void createUser(User user) {
 
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(List.of(new Role(2L, "ROLE_USER")));
-        }
-
         user.setPassword(passwordEncoder
                 .encode(user.getPassword()));
 
@@ -61,10 +57,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(User user) {
-
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(List.of(new Role(2L, "ROLE_USER")));
-        }
 
         user.setPassword(passwordEncoder
                 .encode(user.getPassword()));
