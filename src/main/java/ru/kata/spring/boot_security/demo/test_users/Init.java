@@ -16,11 +16,6 @@ public class Init {
 
     private final UserService userService;
     private final RoleService roleService;
-    User admin;
-    User user1;
-    User user2;
-    Role adminRole;
-    Role userRole;
 
     @Autowired
     public Init(UserService userService,
@@ -33,19 +28,19 @@ public class Init {
     @PostConstruct
     public void init() {
 
-        adminRole = new Role(1L, "ROLE_ADMIN");
-        userRole = new Role(2L, "ROLE_USER");
+        Role adminRole = new Role(1L, "ROLE_ADMIN");
+        Role userRole = new Role(2L, "ROLE_USER");
 
         roleService.saveRole(adminRole);
         roleService.saveRole(userRole);
 
-        admin = new User("admin", "1234",
+        User admin = new User("admin", "1234",
                 1990, "admin@mail.ru", List.of(adminRole, userRole));
 
-        user1 = new User("user1", "5678",
+        User user1 = new User("user1", "5678",
                 1991, "user1@mail.ru", List.of(userRole));
 
-        user2 = new User("user2", "1234",
+        User user2 = new User("user2", "1234",
                 1992, "user2@mail.ru", List.of(userRole));
 
         userService.createUser(admin);
